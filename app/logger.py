@@ -4,6 +4,7 @@ from loguru import logger
 import sys
 
 
+@logger.catch
 def setup_logger() -> None:
     logger.remove()
 
@@ -22,6 +23,8 @@ def setup_logger() -> None:
     )
 
     logger.info(f"Logging started")
+
+    return None
 
 
 if __name__ == "__main__":

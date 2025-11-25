@@ -50,15 +50,12 @@ class User(BaseModel):
         self.hashrate1m_flag = v
         logger.info(f"Set: {self.hashrate1m_flag=}")
 
-
-
     @logger.catch
     def set_hashrate5m_flag(self, v: bool) -> None:
         if not isinstance(v, bool):
             raise ValueError(f"Given value is not instance of bool!")
         self.hashrate5m_flag = v
         logger.info(f"Set: {self.hashrate5m_flag=}")
-
 
     @logger.catch
     def set_hashrate1hr_flag(self, v: bool) -> None:
@@ -163,6 +160,11 @@ class User(BaseModel):
             raise Exception(e)
 
         return None
+
+
+    @logger.catch
+    def __str__(self) -> str:
+        return "User:\n" + "\n".join(f"{k}: {v}" for k, v in self.__dict__.items())
 
 
 if __name__ == "__main__":

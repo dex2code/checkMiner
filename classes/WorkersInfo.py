@@ -52,7 +52,7 @@ class WorkersInfo(BaseModel):
 
     @logger.catch
     def __str__(self) -> str:
-        return "WorkersInfo:" + "\n".join(f"{k}: {v}" for k, v in self.__dict__.items())
+        return "WorkersInfo:\n" + "\n".join(f"{k}: {v}" for k, v in self.__dict__.items())
 
 
 if __name__ == "__main__":

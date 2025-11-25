@@ -15,7 +15,7 @@ class UserInfo(BaseModel):
 
     @logger.catch
     def __str__(self) -> str:
-        return "UserInfo:" + "\n".join(f"{k}: {v}" for k, v in self.__dict__.items())
+        return "UserInfo:\n" + "\n".join(f"{k}: {v}" for k, v in self.__dict__.items())
 
 
 if __name__ == "__main__":

@@ -30,30 +30,30 @@ async def main() -> None:
     while not shutdown_event.is_set():
         logger.info(f"Main loop executing:")
 
-        for user_addr in manager.user_list:
-            user_name = manager.user_list[user_addr].get_user_name()
+        for user in manager.user_list:
+            user_name = manager.user_list[user].get_user_name()
 
             logger.info(f"Updating info for user {user_name}...")
-            logger.debug(f"{manager.user_list[user_addr].info}")
-            info_flag = manager.user_list[user_addr].info_flag
-            old_balance = manager.user_list[user_addr].info.final_balance
+            logger.debug(f"{manager.user_list[user].info}")
+            info_flag = manager.user_list[user].info_flag
+            old_balance = manager.user_list[user].info.final_balance
             try:
-                await manager.user_list[user_addr].update_info()
+                await manager.user_list[user].update_info()
             
             except Exception as e:
                 logger.exception(f"Cannot update info for user {user_name}: {e} ({info_flag=})")
                 if not info_flag:
-                    manager.user_list[user_addr].set_info_flag(v=True)
+                    manager.user_list[user].set_info_flag(v=True)
                     # Inform Balance API Error
             
             else:
                 logger.info(f"Successfully updated info for user {user_name} ({info_flag=})")
-                logger.debug(f"{manager.user_list[user_addr].info}")
+                logger.debug(f"{manager.user_list[user].info}")
 
-                new_balance = manager.user_list[user_addr].info.final_balance
+                new_balance = manager.user_list[user].info.final_balance
 
                 if info_flag:
-                    manager.user_list[user_addr].set_info_flag(v=False)
+                    manager.user_list[user].set_info_flag(v=False)
                     # inform Balance API Ok with current balance
 
                 if old_balance != new_balance:
@@ -64,26 +64,26 @@ async def main() -> None:
 
 
             logger.info(f"Updating workers for user {user_name}...")
-            logger.debug(f"{manager.user_list[user_addr].workers}")
-            workers_flag = manager.user_list[user_addr].workers_flag
-            old_number_workers = manager.user_list[user_addr].workers.workers
+            logger.debug(f"{manager.user_list[user].workers}")
+            workers_flag = manager.user_list[user].workers_flag
+            old_number_workers = manager.user_list[user].workers.workers
             try:
-                await manager.user_list[user_addr].update_workers()
+                await manager.user_list[user].update_workers()
             
             except Exception as e:
                 logger.exception(f"Cannot update workers for user {user_name}: {e} ({workers_flag=})")
                 if not workers_flag:
-                    manager.user_list[user_addr].set_workers_flag(v=True)
+                    manager.user_list[user].set_workers_flag(v=True)
                     # Inform Workers API Error
 
             else:
                 logger.info(f"Successfully updated workers for user {user_name} ({workers_flag=})")
-                logger.debug(f"{manager.user_list[user_addr].workers}")
+                logger.debug(f"{manager.user_list[user].workers}")
 
-                new_number_workers = manager.user_list[user_addr].workers.workers
+                new_number_workers = manager.user_list[user].workers.workers
 
                 if workers_flag:
-                    manager.user_list[user_addr].set_workers_flag(v=False)
+                    manager.user_list[user].set_workers_flag(v=False)
                     # Inform Workers API OK with current number of workers
 
                 if old_number_workers != new_number_workers:
@@ -94,92 +94,92 @@ async def main() -> None:
 
 
                 try:
-                    cur_hashrate1m_str = manager.user_list[user_addr].workers.hashrate1m
-                    cur_hashrate1m_int = manager.user_list[user_addr].workers.get_hashrate1m_int()
-                    tr_hashrate1m_str = app_config.pool_users[user_addr].hashrate1m_treshold
+                    cur_hashrate1m_str = manager.user_list[user].workers.hashrate1m
+                    cur_hashrate1m_int = manager.user_list[user].workers.get_hashrate1m_int()
+                    tr_hashrate1m_str = app_config.pool_users[user].hashrate1m_treshold
                     tr_hashrate1m_int = convert_hashrate(tr_hashrate1m_str)
-                    flag_hashrate1m = manager.user_list[user_addr].hashrate1m_flag
+                    flag_hashrate1m = manager.user_list[user].hashrate1m_flag
 
                     if cur_hashrate1m_int < tr_hashrate1m_int:
                         logger.warning(f"1m hashrate for user {user_name} is lower than expected: {cur_hashrate1m_str} < {tr_hashrate1m_str} ({flag_hashrate1m=})")
 
                         if not flag_hashrate1m:
-                            manager.user_list[user_addr].set_hashrate1m_flag(v=True)
+                            manager.user_list[user].set_hashrate1m_flag(v=True)
                             # Inform Hashrate 1m LOW
 
                     else:
                         logger.info(f"1m hashrate for user {user_name} is OK: {cur_hashrate1m_str} >= {tr_hashrate1m_str} ({flag_hashrate1m=})")
 
                         if flag_hashrate1m:
-                            manager.user_list[user_addr].set_hashrate1m_flag(v=False)
+                            manager.user_list[user].set_hashrate1m_flag(v=False)
                             # Inform Hashrate 1m OK
 
                 except Exception as e:
-                    flag_hashrate1m = manager.user_list[user_addr].hashrate1m_flag
+                    flag_hashrate1m = manager.user_list[user].hashrate1m_flag
                     logger.exception(f"Cannot compare hashrate1m for user {user_name}: {e}\n ({flag_hashrate1m=})")
                 
                 else:
-                    flag_hashrate1m = manager.user_list[user_addr].hashrate1m_flag
+                    flag_hashrate1m = manager.user_list[user].hashrate1m_flag
                     logger.info(f"Successfully measured hashrate1m ({flag_hashrate1m=})")
 
 
                 try:
-                    cur_hashrate5m_str = manager.user_list[user_addr].workers.hashrate5m
-                    cur_hashrate5m_int = manager.user_list[user_addr].workers.get_hashrate5m_int()
-                    tr_hashrate5m_str = app_config.pool_users[user_addr].hashrate5m_treshold
+                    cur_hashrate5m_str = manager.user_list[user].workers.hashrate5m
+                    cur_hashrate5m_int = manager.user_list[user].workers.get_hashrate5m_int()
+                    tr_hashrate5m_str = app_config.pool_users[user].hashrate5m_treshold
                     tr_hashrate5m_int = convert_hashrate(tr_hashrate5m_str)
-                    flag_hashrate5m = manager.user_list[user_addr].hashrate5m_flag
+                    flag_hashrate5m = manager.user_list[user].hashrate5m_flag
 
                     if cur_hashrate5m_int < tr_hashrate5m_int:
                         logger.warning(f"5m hashrate for user {user_name} is lower than expected: {cur_hashrate5m_str} < {tr_hashrate5m_str} ({flag_hashrate5m=})")
 
-                        if not manager.user_list[user_addr].hashrate5m_flag:
-                            manager.user_list[user_addr].set_hashrate5m_flag(v=True)
+                        if not manager.user_list[user].hashrate5m_flag:
+                            manager.user_list[user].set_hashrate5m_flag(v=True)
                             # Inform hashrate 5m is LOW
 
                     else:
                         logger.info(f"5m hashrate for user {user_name} is OK: {cur_hashrate5m_str} >= {tr_hashrate5m_str} ({flag_hashrate5m=})")
 
-                        if manager.user_list[user_addr].hashrate5m_flag:
-                            manager.user_list[user_addr].set_hashrate5m_flag(v=False)
+                        if manager.user_list[user].hashrate5m_flag:
+                            manager.user_list[user].set_hashrate5m_flag(v=False)
                             # Inform hashrate 5m is OK
 
                 except Exception as e:
-                    flag_hashrate5m = manager.user_list[user_addr].hashrate5m_flag
+                    flag_hashrate5m = manager.user_list[user].hashrate5m_flag
                     logger.exception(f"Cannot compare hashrate5m for user {user_name}: {e}")
                 
                 else:
-                    flag_hashrate5m = manager.user_list[user_addr].hashrate5m_flag
+                    flag_hashrate5m = manager.user_list[user].hashrate5m_flag
                     logger.info(f"Successfully measured hashrate5m ({flag_hashrate5m=})")
 
 
                 try:
-                    cur_hashrate1hr_str = manager.user_list[user_addr].workers.hashrate1hr
-                    cur_hashrate1hr_int = manager.user_list[user_addr].workers.get_hashrate1hr_int()
-                    tr_hashrate1hr_str = app_config.pool_users[user_addr].hashrate1hr_treshold
+                    cur_hashrate1hr_str = manager.user_list[user].workers.hashrate1hr
+                    cur_hashrate1hr_int = manager.user_list[user].workers.get_hashrate1hr_int()
+                    tr_hashrate1hr_str = app_config.pool_users[user].hashrate1hr_treshold
                     tr_hashrate1hr_int = convert_hashrate(tr_hashrate1hr_str)
-                    flag_hashrate1hr = manager.user_list[user_addr].hashrate1hr_flag
+                    flag_hashrate1hr = manager.user_list[user].hashrate1hr_flag
 
                     if cur_hashrate1hr_int < tr_hashrate1hr_int:
                         logger.warning(f"1hr hashrate for user {user_name} is lower than expected: {cur_hashrate1hr_str} < {tr_hashrate1hr_str} ({flag_hashrate1hr=})")
 
-                        if not manager.user_list[user_addr].hashrate1hr_flag:
-                            manager.user_list[user_addr].set_hashrate1hr_flag(v=True)
+                        if not manager.user_list[user].hashrate1hr_flag:
+                            manager.user_list[user].set_hashrate1hr_flag(v=True)
                             # Inform hashrate 1hr is LOW
 
                     else:
                         logger.info(f"1hr hashrate for user {user_name} is OK: {cur_hashrate1hr_str} >= {tr_hashrate1hr_str} ({flag_hashrate1hr=})")
 
-                        if manager.user_list[user_addr].hashrate1hr_flag:
-                            manager.user_list[user_addr].set_hashrate1hr_flag(v=False)
+                        if manager.user_list[user].hashrate1hr_flag:
+                            manager.user_list[user].set_hashrate1hr_flag(v=False)
                             # Inform hashrate 1h is OK
 
                 except Exception as e:
-                    flag_hashrate1hr = manager.user_list[user_addr].hashrate1hr_flag
+                    flag_hashrate1hr = manager.user_list[user].hashrate1hr_flag
                     logger.exception(f"Cannot compare hashrate1hr for user {user_name}: {e}")
                 
                 else:
-                    flag_hashrate1hr = manager.user_list[user_addr].hashrate1hr_flag
+                    flag_hashrate1hr = manager.user_list[user].hashrate1hr_flag
                     logger.info(f"Successfully measured hashrate1hr ({flag_hashrate1hr=})")
 
 
