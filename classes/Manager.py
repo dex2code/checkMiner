@@ -6,7 +6,7 @@ from classes.User import User
 from loguru import logger
 
 
-class UserManager():
+class Manager():
     @logger.catch
     def __init__(self) -> None:
         self.user_list: dict[str, User] = {}
@@ -22,7 +22,7 @@ class UserManager():
             )
 
 
-user_manager = UserManager()
+manager = Manager()
 
 
 if __name__ == "__main__":
