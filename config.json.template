@@ -4,7 +4,7 @@
 
     "logger": {
         "path": "logs/app.log",
-        "level": "DEBUG",
+        "level": "INFO",
         "rotation": "1 day",
         "retention": "1 week",
         "serialize": false
@@ -13,14 +13,14 @@
     "pool_users": {
 
         "wallet1_addr": {
-            "memo": "user1_memo"
+            "memo": "wallet1_memo"
             "hashrate1m_treshold": "400G",
             "hashrate5m_treshold": "500G",
             "hashrate1hr_treshold": "600G"
         },
 
         "wallet2_addr": {
-            "memo": "user2_memo"
+            "memo": "wallet2_memo"
             "hashrate1m_treshold": "400G",
             "hashrate5m_treshold": "500G",
             "hashrate1hr_treshold": "600G"
@@ -28,7 +28,7 @@
 
     },
 
-    "pool_api": "https://eusolo.ckpool.org/users/{wallet_address}",
+    "pool_api": "https://solo.ckpool.org/users/{wallet_address}",
     "balance_api": "https://api.blockcypher.com/v1/btc/main/addrs/{wallet_address}/balance"
 
 }
