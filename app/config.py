@@ -1,5 +1,7 @@
 from pydantic import BaseModel, SecretStr, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from urllib.parse import urlparse
+from typing import Optional
 
 
 class LoggerConfig(BaseModel):
@@ -18,11 +20,12 @@ class PoolUserConfig(BaseModel):
 
 
 class AppConfig(BaseSettings):
+    bot_nickname: str
+    loop_sleep_seconds: int
     logger: LoggerConfig
     pool_users: dict[str, PoolUserConfig]
     pool_api: str
     balance_api: str
-    loop_sleep_seconds: int
 
     TG_BOT_TOKEN: SecretStr
     TG_CHAT_ID: SecretStr
@@ -31,6 +34,12 @@ class AppConfig(BaseSettings):
         env_file=".env",
         extra="ignore"
     )
+
+    def get_pool_api_host(self) -> Optional[str]:
+        return urlparse(self.pool_api).hostname
+
+    def get_balance_api_host(self) -> Optional[str]:
+        return urlparse(self.balance_api).hostname
 
 
 app_config = AppConfig.model_validate_json(

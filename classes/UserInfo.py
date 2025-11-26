@@ -13,6 +13,16 @@ class UserInfo(BaseModel):
     unconfirmed_n_tx: int = Field(default=-1)
     final_n_tx: int = Field(default=-1)
 
+
+    @logger.catch
+    def get_balance_btc(self) -> float:
+        return self.balance / 100_000_000
+    
+    @logger.catch
+    def get_tg_balance(self) -> str:
+        return f"{self.balance:,} SAT ({self.get_balance_btc()} BTC)"
+
+
     @logger.catch
     def __str__(self) -> str:
         return "UserInfo:\n" + "\n".join(f"{k}: {v}" for k, v in self.__dict__.items())

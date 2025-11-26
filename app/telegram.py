@@ -10,10 +10,33 @@ bot = Bot(
 
 
 @logger.catch
-async def tg_bot_shutdown() -> None:
-    logger.warning(f"Shutting down TG Bot...")
+async def send_message(t: str) -> None:
+    logger.info(f"Sending message: {t}")
+    await bot.send_message(
+        chat_id=app_config.TG_CHAT_ID.get_secret_value(),
+        text=f"{app_config.bot_nickname}:\n{t}"
+    )
+    return None
+
+
+@logger.catch
+async def tg_start() -> None:
+    await send_message(f"⚡ Service Started!")
+    return None
+
+
+@logger.catch
+async def tg_users(t: str) -> None:
+    await send_message(f"👀 Watching for:\n{t}")
+    return None
+
+
+@logger.catch
+async def tg_stop() -> None:
+    await send_message(f"❌ Service stopped!")
     await bot.session.close()
     logger.warning(f"TG Bot is stopped")
+    return None
 
 
 if __name__ == "__main__":

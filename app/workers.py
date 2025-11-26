@@ -14,14 +14,11 @@ async def operate_workers(user: str) -> None:
     logger.info(f"Updating workers for user {user_name} ({workers_flag=})")
     logger.debug(f"{manager.user_list[user].workers}")
 
-    try:
-        await manager.user_list[user].update_workers()
-    
-    except Exception as e:
-        logger.exception(f"Cannot update workers for user {user_name}: {e} ({workers_flag=})")
+    if not await manager.user_list[user].update_workers():
+        logger.error(f"Cannot update workers for user {user_name} ({workers_flag=})")
         if not workers_flag:
             manager.user_list[user].set_workers_flag(v=True)
-            # Inform Workers API Error
+            await manager.user_list[user].tg_pool_api_error()
 
     else:
         logger.info(f"Successfully updated workers for user {user_name} ({workers_flag=})")
@@ -31,11 +28,11 @@ async def operate_workers(user: str) -> None:
 
         if workers_flag:
             manager.user_list[user].set_workers_flag(v=False)
-            # Inform Workers API OK with current number of workers
+            await manager.user_list[user].tg_pool_api_alive()
 
         if old_number_workers != new_number_workers:
             logger.warning(f"Number of workers for user {user_name} changed: {old_number_workers} -> {new_number_workers}")
-            # Inform number of workers changed
+            await manager.user_list[user].tg_workers_changed()
         else:
             logger.info(f"Number of workers for user {user_name} is the same: {new_number_workers}")
 
@@ -52,14 +49,14 @@ async def operate_workers(user: str) -> None:
 
                 if not flag_hashrate1m:
                     manager.user_list[user].set_hashrate1m_flag(v=True)
-                    # Inform Hashrate 1m LOW
+                    await manager.user_list[user].tg_hashrate1m_low()
 
             else:
                 logger.info(f"1m hashrate for user {user_name} is OK: {cur_hashrate1m_str} >= {tr_hashrate1m_str} ({flag_hashrate1m=})")
 
                 if flag_hashrate1m:
                     manager.user_list[user].set_hashrate1m_flag(v=False)
-                    # Inform Hashrate 1m OK
+                    await manager.user_list[user].tg_hashrate1m_ok()
 
         except Exception as e:
             flag_hashrate1m = manager.user_list[user].hashrate1m_flag
@@ -82,14 +79,14 @@ async def operate_workers(user: str) -> None:
 
                 if not manager.user_list[user].hashrate5m_flag:
                     manager.user_list[user].set_hashrate5m_flag(v=True)
-                    # Inform hashrate 5m is LOW
+                    await manager.user_list[user].tg_hashrate5m_low()
 
             else:
                 logger.info(f"5m hashrate for user {user_name} is OK: {cur_hashrate5m_str} >= {tr_hashrate5m_str} ({flag_hashrate5m=})")
 
                 if manager.user_list[user].hashrate5m_flag:
                     manager.user_list[user].set_hashrate5m_flag(v=False)
-                    # Inform hashrate 5m is OK
+                    await manager.user_list[user].tg_hashrate5m_ok()
 
         except Exception as e:
             flag_hashrate5m = manager.user_list[user].hashrate5m_flag
@@ -112,14 +109,14 @@ async def operate_workers(user: str) -> None:
 
                 if not manager.user_list[user].hashrate1hr_flag:
                     manager.user_list[user].set_hashrate1hr_flag(v=True)
-                    # Inform hashrate 1hr is LOW
+                    await manager.user_list[user].tg_hashrate1hr_low()
 
             else:
                 logger.info(f"1hr hashrate for user {user_name} is OK: {cur_hashrate1hr_str} >= {tr_hashrate1hr_str} ({flag_hashrate1hr=})")
 
                 if manager.user_list[user].hashrate1hr_flag:
                     manager.user_list[user].set_hashrate1hr_flag(v=False)
-                    # Inform hashrate 1h is OK
+                    await manager.user_list[user].tg_hashrate1hr_ok()
 
         except Exception as e:
             flag_hashrate1hr = manager.user_list[user].hashrate1hr_flag

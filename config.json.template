@@ -1,5 +1,7 @@
 {
 
+    "bot_nickname": "🤖 CheckMiner",
+
     "loop_sleep_seconds": 300,
 
     "logger": {

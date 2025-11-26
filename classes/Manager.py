@@ -20,6 +20,10 @@ class Manager():
                 ),
                 workers=WorkersInfo()
             )
+    
+    @logger.catch
+    def get_tg_list_users(self) -> str:
+        return "\n".join(f"👛 {k[:5]} ... {k[-6:]} ({self.user_list[k].memo})" for k in self.user_list)
 
 
 manager = Manager()
