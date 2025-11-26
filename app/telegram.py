@@ -2,6 +2,7 @@ from app.config import app_config
 
 from loguru import logger
 from aiogram import Bot
+import asyncio
 
 
 bot = Bot(
@@ -16,6 +17,7 @@ async def send_message(t: str) -> None:
         chat_id=app_config.TG_CHAT_ID.get_secret_value(),
         text=f"{app_config.bot_nickname}:\n{t}"
     )
+    await asyncio.sleep(delay=2.1)
     return None
 
 
