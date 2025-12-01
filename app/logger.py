@@ -1,4 +1,4 @@
-from app.config import app_config
+from classes.Config import app_config
 
 from loguru import logger
 import sys

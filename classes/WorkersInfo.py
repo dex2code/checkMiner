@@ -17,38 +17,6 @@ class WorkersInfo(BaseModel):
     bestever: int = Field(default=0)
     authorised: int = Field(default=0)
 
-    @logger.catch
-    def get_hashrate1m_int(self) -> int:
-        try:
-            return convert_hashrate(
-                s = self.hashrate1m
-            )
-        except ValueError as e:
-            logger.exception(f"{e}")
-            raise ValueError(e)
-
-
-    @logger.catch
-    def get_hashrate5m_int(self) -> int:
-        try:
-            return convert_hashrate(
-                s = self.hashrate5m
-            )
-        except ValueError as e:
-            logger.exception(f"{e}")
-            raise ValueError(e)
-
-
-    @logger.catch
-    def get_hashrate1hr_int(self) -> int:
-        try:
-            return convert_hashrate(
-                s = self.hashrate1hr
-            )
-        except ValueError as e:
-            logger.exception(f"{e}")
-            raise ValueError(e)
-
 
     @logger.catch
     def __str__(self) -> str:

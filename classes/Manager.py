@@ -1,4 +1,4 @@
-from app.config import app_config
+from classes.Config import app_config
 from classes.UserInfo import UserInfo
 from classes.WorkersInfo import WorkersInfo
 from classes.User import User
@@ -18,7 +18,10 @@ class Manager():
                 info=UserInfo(
                     address=pool_user
                 ),
-                workers=WorkersInfo()
+                workers=WorkersInfo(),
+                hashrate1m_treshold_str=app_config.pool_users[pool_user].hashrate1m_treshold,
+                hashrate5m_treshold_str=app_config.pool_users[pool_user].hashrate5m_treshold,
+                hashrate1hr_treshold_str=app_config.pool_users[pool_user].hashrate1hr_treshold
             )
     
     @logger.catch
