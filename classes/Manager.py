@@ -15,6 +15,7 @@ class Manager():
             self.user_list[pool_user] = User(
                 address=pool_user,
                 memo=app_config.pool_users[pool_user].memo,
+                daily_statistics=app_config.pool_users[pool_user].daily_statistics,
                 info=UserInfo(
                     address=pool_user
                 ),

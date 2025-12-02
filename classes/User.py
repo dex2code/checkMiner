@@ -12,6 +12,7 @@ import httpx
 class User(BaseModel):
     address: str
     memo: str
+    daily_statistics: bool
 
     info: UserInfo
     info_flag: bool = Field(default=False)
@@ -138,6 +139,13 @@ class User(BaseModel):
     async def tg_hashrate1hr_ok(self) -> None:
         await send_message(
             t=f"{self.get_tg_user_name()}:\n🟢 Hashrate 1hr OK: {self.workers.hashrate1hr}"
+        )
+    
+
+    @logger.catch
+    async def tg_daily_statistics(self) -> None:
+        await send_message(
+            t=f"🕑 Daily info for {self.get_tg_user_name()}:\n🛠 Hashrate 1d: {self.workers.hashrate1d}\n💰 Balance: {self.info.get_tg_balance()}"
         )
 
 

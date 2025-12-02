@@ -17,6 +17,7 @@ class PoolUserConfig(BaseModel):
     hashrate1m_treshold: str = Field(pattern=r'^\d+(\.\d+)?[KMGT]$')
     hashrate5m_treshold: str = Field(pattern=r'^\d+(\.\d+)?[KMGT]$')
     hashrate1hr_treshold: str = Field(pattern=r'^\d+(\.\d+)?[KMGT]$')
+    daily_statistics: bool
 
 
 class AppConfig(BaseSettings):
