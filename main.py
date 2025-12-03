@@ -27,6 +27,7 @@ def sigterm_handler() -> None:
     sleep_event.set()
 
 
+@logger.catch
 async def main() -> None:
     aio_loop = asyncio.get_event_loop()
 
