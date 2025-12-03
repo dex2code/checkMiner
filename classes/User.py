@@ -201,6 +201,7 @@ class User(BaseModel):
             logger.error(f"Cannot update info for user {user_name} ({self.info_flag=})")
             if not self.info_flag:
                 self.set_info_flag(v=True)
+                self.info.set_balance(b=-1)
                 await self.tg_balance_api_error()
             return None
     
@@ -269,6 +270,9 @@ class User(BaseModel):
             logger.error(f"Cannot update workers for user {self.get_user_name()} ({self.workers_flag=})")
             if not self.workers_flag:
                 self.set_workers_flag(v=True)
+                self.set_hashrate1m_flag(v=True)
+                self.set_hashrate5m_flag(v=True)
+                self.set_hashrate1hr_flag(v=True)
                 await self.tg_pool_api_error()
             return None
 

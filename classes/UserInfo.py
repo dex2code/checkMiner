@@ -15,6 +15,12 @@ class UserInfo(BaseModel):
 
 
     @logger.catch
+    def set_balance(self, b:int):
+        self.balance = b
+        self.unconfirmed_balance = b
+        self.final_balance = b
+
+    @logger.catch
     def get_balance_btc(self) -> float:
         return self.balance / 100_000_000
     
